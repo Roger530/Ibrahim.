@@ -1,3 +1,2 @@
-tkinter as tk
+flet
 webbrowser
-arabic_reshaper
