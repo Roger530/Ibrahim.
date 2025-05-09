@@ -1,31 +1,31 @@
-import tkinter as tk
+import flet as ft
 import webbrowser
-import arabic_reshaper
 
-def reshape(text):
-    return arabic_reshaper.reshape(text)[::-1]  # فقط عكس النص لتقريب شكل العربية
+def main(page: ft.Page):
+    page.title = "تتبع الهاتف"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.padding = 30
 
-def open_android_tracker():
-    webbrowser.open("https://www.google.com/android/find")
+    def open_android_tracker(e):
+        webbrowser.open("https://www.google.com/android/find")
 
-def open_apple_tracker():
-    webbrowser.open("https://www.icloud.com/find")
+    def open_apple_tracker(e):
+        webbrowser.open("https://www.icloud.com/find")
 
-root = tk.Tk()
-root.title("تتبع الهاتف")
-root.geometry("400x250")
-root.configure(bg="#f0f0f0")
+    title = ft.Text("اختر نوع جهازك لتتبع الهاتف", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
+    android_button = ft.ElevatedButton("هاتف أندرويد", on_click=open_android_tracker, width=250, height=50, bgcolor=ft.colors.GREEN_600, color=ft.colors.WHITE)
+    apple_button = ft.ElevatedButton("هاتف آيفون", on_click=open_apple_tracker, width=250, height=50, bgcolor=ft.colors.BLUE_600, color=ft.colors.WHITE)
+    footer = ft.Text("هذه الخدمة تعتمد على مواقع Google و Apple الرسمية", size=12, color=ft.colors.GREY)
 
-label = tk.Label(root, text=reshape("اختر نوع جهازك لتتبع الهاتف"), font=("Arial", 14, "bold"), bg="#f0f0f0")
-label.pack(pady=20)
+    page.add(
+        title,
+        ft.Column(
+            [android_button, apple_button],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=20,
+        ),
+        footer
+    )
 
-android_button = tk.Button(root, text=reshape("هاتف أندرويد"), command=open_android_tracker, width=25, height=2, bg="#4CAF50", fg="white", font=("Arial", 12))
-android_button.pack(pady=10)
-
-apple_button = tk.Button(root, text=reshape("هاتف آيفون"), command=open_apple_tracker, width=25, height=2, bg="#2196F3", fg="white", font=("Arial", 12))
-apple_button.pack(pady=10)
-
-footer = tk.Label(root, text=reshape("هذه الخدمة تعتمد على مواقع Google و Apple الرسمية"), font=("Arial", 9), bg="#f0f0f0", fg="gray")
-footer.pack(side="bottom", pady=10)
-
-root.mainloop()
+ft.app(target=main)
